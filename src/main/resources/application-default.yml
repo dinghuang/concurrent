@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: springboot-mybatis-mall
+  freemarker:
+      cache: false
+      request-context-attribute: request
+      checkTemplateLocation: false
+  datasource:
+    url: jdbc:mysql://localhost/shopping?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: root
+server:
+  port: 8086
+logging:
+  level.com.shopping.mall: DEBUG
