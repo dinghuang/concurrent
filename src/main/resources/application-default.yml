@@ -13,3 +13,30 @@ server:
   port: 8086
 logging:
   level.com.shopping.mall: DEBUG
+security:
+  oauth2:
+    client:
+      client-id: acme
+      client-secret: acmesecret
+      scope: read,write
+      auto-approve-scopes: '.*'
+#facebook:
+#  client:
+#    clientId: 233668646673605
+#    clientSecret: 33b17e044ee6a4fa383f46ec6e28ea1d
+#    accessTokenUri: https://graph.facebook.com/oauth/access_token
+#    userAuthorizationUri: https://www.facebook.com/dialog/oauth
+#    tokenName: oauth_token
+#    authenticationScheme: query
+#    clientAuthenticationScheme: form
+#  resource:
+#    userInfoUri: https://graph.facebook.com/me
+github:
+  client:
+    clientId: 8e50dd81cb347868b0d1
+    clientSecret: a15141b444d0b0c38bbceecc16ea837f9f5c9c35
+    accessTokenUri: https://github.com/login/oauth/access_token
+    userAuthorizationUri: https://github.com/login/oauth/authorize
+    clientAuthenticationScheme: form
+  resource:
+    userInfoUri: https://api.github.com/user
