@@ -98,8 +98,15 @@
 			<artifactId>js-cookie</artifactId>
 			<version>2.1.0</version>
 		</dependency>
-	</dependencies>
+		<!-- https://mvnrepository.com/artifact/junit/junit -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
 
+	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
