@@ -9,7 +9,7 @@ import java.util.List;
  * @since 2018/5/22
  */
 public class AlphabeticallySort {
-    public static void main(String[] args) {
+      public static void main(String[] args) {
         String min = "0|aaaa";
         String max = "0|aaab";
         String middleNum = generateMiddleNum(max, min, 4);
