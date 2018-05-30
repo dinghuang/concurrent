@@ -1,4 +1,4 @@
-package com.example.demo.parallelstream;
+package com.example.demo.lambda;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;

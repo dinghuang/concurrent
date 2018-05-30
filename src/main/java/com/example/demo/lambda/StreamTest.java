@@ -1,4 +1,4 @@
-package com.example.demo.parallelstream;
+package com.example.demo.lambda;
 
 import java.util.*;
 import java.util.function.BinaryOperator;
@@ -8,7 +8,7 @@ import java.util.stream.*;
  * @author dinghuang123@gmail.com
  * @since 2018/5/25
  */
-public class Java8StreamTest {
+public class StreamTest {
     private static List<String> list = Stream.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10").collect(Collectors.toList());
     private static Set<String> set = Stream.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10").collect(Collectors.toSet());
     private static Map<String, String> map1 = list.stream().collect(Collectors.toMap(str -> str, str -> str + "_value1"));
@@ -20,12 +20,12 @@ public class Java8StreamTest {
          * 及早求值函数，求总数
          */
         count();
-
+        System.out.println("==========================================================================");
         /**
          * collect方法：由Stream里的值生成一个列表，是一个及早求值操作（.of()方法是惰性求值的方法）。list、set初始化既是
          */
         collect();
-
+        System.out.println("==========================================================================");
         /**
          * 如果有一个函数可以将一种类型的值转换成另外一种类型，map操作就可以使用该函数，将一个流中的值转换成一个新的流
          * 扩展方法：
@@ -34,12 +34,12 @@ public class Java8StreamTest {
          * DoubleStream mapToDouble(ToDoubleFunction<? super T> mapper);
          */
         map();
-
+        System.out.println("==========================================================================");
         /**
          * 保留stream中的一些元素，过滤其他的
          */
         filter();
-
+        System.out.println("==========================================================================");
         /**
          * flatMap方法可用Stream替换值，然后将多个Stream连接成一个Stream
          * 扩展方法：
@@ -48,70 +48,70 @@ public class Java8StreamTest {
          * DoubleStream flatMapToDouble(Function<? super T, ? extends DoubleStream> mapper);
          */
         flatMap();
-
+        System.out.println("==========================================================================");
         /**
          * distinct及早返回函数，去掉重复对象
          */
         distinct();
-
+        System.out.println("==========================================================================");
         /**
          * sorted排序
          * sorted(Comparator<? super T> comparator) 传入比较器
          */
         sorted();
-
+        System.out.println("==========================================================================");
         /**
          * peek用于多次消费流，做一些事情不影响对流的处理，一般用于记录操作
          */
         peek();
-
+        System.out.println("==========================================================================");
         /**
          * limit截断流 Stream<T> limit(long maxSize);
          */
         limit();
-
+        System.out.println("==========================================================================");
         /**
          * skip跳过 Stream<T> skip(long n);
          * 可以理解成limit返回指定的数据，skip返回不包含指定的数据。
          */
         skip();
-
+        System.out.println("==========================================================================");
         /**
          * forEach 略
          */
         forEach();
-
+        System.out.println("==========================================================================");
         /**
          * forEachOrdered 并行时forEach()是无序的，forEachOrdered是有序的
          */
         forEachOrdered();
-
+        System.out.println("==========================================================================");
         /**
          * max和min，注意这两个方法都是及早值操作，后面需要接一个get()方法获取结果对象（get可以取出Optional对象中的值）
          */
         max();
         min();
-
+        System.out.println("==========================================================================");
         /**
          * reduce简约方法，reduce可以实现从一组值中生成一个值，其实count、max、min都是reduce操作。
          * 实际是reduce函数在stream中遍历一遍，最后函数结果即为最终值
          * T reduce(T identity, BinaryOperator<T> accumulator);identity累计结果值，accumulator是累加器
          */
         reduce();
-
+        System.out.println("==========================================================================");
         /**
          * 及早返回函数match匹配，参数都是Predicate<? super T> predicate，返回boolean
          */
         anyMatch();
         allMatch();
         noneMatch();
-
+        System.out.println("==========================================================================");
         /**
          * 返回一条记录或随机返回一条记录
          */
         findFirst();
         findAny();
-
+        System.out.println("==========================================================================");
         /**
          * 用函数生成流
          * Stream.iterate(0, n -> n + 2).limit(10) .forEach(System.out::println);
@@ -119,7 +119,7 @@ public class Java8StreamTest {
          */
         iterate();
         generate();
-
+        System.out.println("==========================================================================");
         /**
          * IntStream：BaseStream子类，这里写了一些IntStream单独的方法：
          * OptionalDouble average()：计算平均数
@@ -129,7 +129,7 @@ public class Java8StreamTest {
          * IntStream rangeClosed(int startInclusive, int endExclusive)：返回范围，包含最后的结束节点
          */
         intStream();
-
+        System.out.println("==========================================================================");
         /**
          * LongStream：BaseStream子类，这里写了一些LongStream单独的方法：
          * OptionalDouble average()：计算平均数
@@ -139,7 +139,7 @@ public class Java8StreamTest {
          * LongStream rangeClosed(int startInclusive, int endExclusive)：返回范围，包含最后的结束节点
          */
         longStream();
-
+        System.out.println("==========================================================================");
         /**
          * DoubleStream：BaseStream子类，这里写了一些DoubleStream单独的方法：
          * OptionalDouble average()：计算平均数
@@ -170,7 +170,7 @@ public class Java8StreamTest {
         System.out.println("map_" + String.join(",", list));
         /** IntStream mapToInt(ToIntFunction<? super T> mapper); **/
         List<Integer> listInteger = Stream.of(1, 2, 3).map(i -> i + 5).collect(Collectors.toList());
-        System.out.println("mapToInt_" + listInteger.get(0) + "," + listInteger.get(1) + " " + listInteger.get(2));
+        System.out.println("mapToInt_" + listInteger.get(0) + "," + listInteger.get(1) + "," + listInteger.get(2));
 
         /** LongStream mapToLong(ToLongFunction<? super T> mapper);**/
         List<Long> listLong = Stream.of(111, 211, 311).map(i -> i + 1L).collect(Collectors.toList());
@@ -220,7 +220,7 @@ public class Java8StreamTest {
     private static void sorted() {
         List<String> list = Stream.of("1", "22", "333", "4444", "55555", "66", "77", "88", "99", "1000").collect(Collectors.toList());
         System.out.println("sorted_" + String.join(",", list.stream().sorted().collect(Collectors.toList())));
-        System.out.println("sorted Comparator_" + String.join(",", list.stream().sorted(Comparator.comparing(str -> str.toString().length())).collect(Collectors.toList())));
+        System.out.println("sorted Comparator_" + String.join(",", list.stream().sorted(Comparator.comparing(str -> str.length())).collect(Collectors.toList())));
     }
 
     private static void peek() {
