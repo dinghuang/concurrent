@@ -1,24 +1,18 @@
 package com.example.demo.google;
 
 
-import com.google.common.base.Functions;
-import com.google.common.base.MoreObjects;
+import com.google.common.base.*;
 import com.google.common.base.Objects;
-import com.google.common.base.Throwables;
-import com.google.common.collect.ComparisonChain;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Ordering;
+import com.google.common.collect.*;
 import com.google.common.primitives.Ints;
+import com.google.common.util.concurrent.*;
 
+import javax.xml.transform.Result;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
-import static com.google.common.base.Throwables.throwIfInstanceOf;
-import static com.google.common.base.Throwables.throwIfUnchecked;
 
 /**
  * google 的guava使用demo
@@ -28,6 +22,27 @@ import static com.google.common.base.Throwables.throwIfUnchecked;
  * @since 2018/5/28
  */
 public class GuavaTest {
+
+    /**
+     * 不可变集合示例
+     */
+    public static final ImmutableSet<String> COLOR_NAMES = ImmutableSet.of("red", "orange",
+            "yellow", "green", "blue", "purple");
+
+
+    /**
+     * 通常来说，Guava Cache适用于：
+     * <p>
+     * 你愿意消耗一些内存空间来提升速度。
+     * 你预料到某些键会被查询一次以上。
+     * 缓存中存放的数据总量不会超出内存容量。（Guava Cache是单个应用运行时的本地缓存
+     * 。它不把数据存放到文件或外部服务器。如果这不符合你的需求，请尝试Memcached这类工具）
+     * 如果你的场景符合上述的每一条，Guava Cache就适合你。
+     * https://github.com/google/guava/blob/68c8619d8ccd8811dd5408b828b7e3a45f07f21d/guava-tests/test/com/google/common/graph/GraphsTest.java
+     */
+    public void cacheTest() throws Exception {
+
+    }
 
     /**
      * Ordering是Guava类库提供的一个犀利强大的比较器工具，
@@ -133,12 +148,255 @@ public class GuavaTest {
             // 。请注意，你可能不应该解析结果字符串;如果您需要编程访问堆栈帧，则可以调用Throwable.getStackTrace（）。
             t.getStackTrace();
         }
+    }
 
+    /**
+     * 集合功能test
+     * 1 不可变集合
+     * 优点：当对象被不可信的库调用时，不可变形式是安全的；不可变对象被多个线程调用时，不存在竞态条件问题
+     * 不可变集合不需要考虑变化，因此可以节省时间和空间。所有不可变的集合都比它们的可变形式有更好的内存利用率（分析和测试细节）；
+     * 不可变对象因为有固定不变，可以作为常量来安全使用。
+     */
+    public void collectTest() {
+        //不可变集合示例
+        List<User> users = new ArrayList<>();
+        final ImmutableSet<User> USER_LIST = ImmutableSet.<User>builder()
+                .addAll(users)
+                .add(new User("XX", 1))
+                .build();
+        //此外，对有序不可变集合来说，排序是在构造集合的时候完成的
+        ImmutableSortedSet.of("a", "b", "c", "a", "d", "b");
+        //Multiset是什么？顾名思义，Multiset和Set的区别就是可以保存多个相同的对象。在JDK中，List和Set有一个基本的区别，
+        // 就是List可以包含多个相同对象，且是有顺序的，而Set不能有重复，
+        // 且不保证顺序（有些实现有顺序，例如LinkedHashSet和SortedSet等）
+        // 所以Multiset占据了List和Set之间的一个灰色地带：允许重复，但是不保证顺序。
+        ImmutableSet<String> foobar = ImmutableSet.of("foo", "bar", "baz");
+        //安全的拷贝
+        //在可能的情况下避免线性拷贝，可以最大限度地减少防御性编程风格所带来的性能开销。
+        ImmutableList<String> defensiveCopy = ImmutableList.copyOf(foobar);
+        //Multiset
+        User user = new User("XX", 1);
+        users.add(user);
+        Multiset<User> users1 = HashMultiset.create();
+        users1.add(user);
+        //给定元素在Multiset中的计数
+        users1.count(user);
+        //Multiset中不重复元素的集合，类型为Set<E>
+        users1.elementSet();
+        //和Map的entrySet类似，返回Set<Multiset.Entry<E>>，其中包含的Entry支持getElement()和getCount()方法
+        users1.entrySet();
+        //增加给定元素在Multiset中的计数
+        users1.add(user, 1);
+        //	减少给定元素在Multiset中的计数
+        users1.remove(user, 1);
+        //设置给定元素在Multiset中的计数，不可以为负数
+        users1.setCount(user, 1);
+        //返回集合元素的总个数（包括重复的元素）
+        users1.size();
+        //SortedMultiset是Multiset 接口的变种，它支持高效地获取指定范围的子集
+        SortedMultiset<User> sortedMultiset = null;
+        sortedMultiset.addAll(users);
+        sortedMultiset.subMultiset(users.get(1), BoundType.CLOSED, users.get(100), BoundType.OPEN).size();
+        //Guava的 Multimap可以很容易地把一个键映射到多个值。换句话说，Multimap是把键映射到任意多个值的一般方式。一般我们用Map<K, List<V>>
+        // creates a ListMultimap with tree keys and array list values
+        ListMultimap<String, User> treeListMultimap = MultimapBuilder.hashKeys().arrayListValues().build();
+        treeListMultimap.put("XX", user);
+        treeListMultimap.putAll("XX", users);
+        //BiMap<K, V>是特殊的Map：可以用 inverse()反转BiMap<K, V>的键值映射保证值是唯一的，因此 values()返回Set而不是普通的Collection
+        BiMap<String, Integer> userId = HashBiMap.create();
+        String userForId = userId.inverse().get(1);
+        //通常来说，当你想使用多个键做索引的时候，你可能会用类似Map<FirstName, Map<LastName, Person>>的实现，
+        // 这种方式很丑陋，使用上也不友好。Guava为此提供了新集合类型Table，它有两个支持所有类型的键：”行”和”列”
+        Table<Integer, Integer, User> weightedGraph = HashBasedTable.create();
+        weightedGraph.put(1, 2, user);
+        weightedGraph.put(1, 3, user);
+        //ClassToInstanceMap是一种特殊的Map：它的键是类型，而值是符合键所指类型的对象。
+        ClassToInstanceMap<Number> numberDefaults = MutableClassToInstanceMap.create();
+        numberDefaults.putInstance(Integer.class, Integer.valueOf(0));
+        //RangeSet描述了一组不相连的、非空的区间。当把一个区间添加到可变的RangeSet时，所有相连的区间会被合并，空区间会被忽略。
+        RangeSet<Integer> rangeSet = TreeRangeSet.create();
+        rangeSet.add(Range.closed(1, 10)); // {[1,10]}
+        rangeSet.add(Range.closedOpen(11, 15));//不相连区间:{[1,10], [11,15)}
+        rangeSet.add(Range.closedOpen(15, 20)); //相连区间; {[1,10], [11,20)}
+        rangeSet.add(Range.openClosed(0, 0)); //空区间; {[1,10], [11,20)}
+        rangeSet.remove(Range.open(5, 10)); //分割[1, 10]; {[1,5], [10,10], [11,20)}
+        //RangeSet最基本的操作，判断RangeSet中是否有任何区间包含给定元素。
+        rangeSet.contains(1);
+        //返回包含给定元素的区间；若没有这样的区间，则返回null。
+        rangeSet.rangeContaining(11);
+        //简单明了，判断RangeSet中是否有任何区间包括给定区间。
+        rangeSet.encloses(Range.open(5, 10));
+        //返回包括RangeSet中所有区间的最小区间。
+        rangeSet.span();
+        //RangeMap描述了”不相交的、非空的区间”到特定值的映射。和RangeSet不同，RangeMap不会合并相邻的映射，即便相邻的区间映射到相同的值
+        RangeMap<Integer, String> rangeMap = TreeRangeMap.create();
+        rangeMap.put(Range.closed(1, 10), "foo"); //{[1,10] => "foo"}
+        rangeMap.put(Range.open(3, 6), "bar"); //{[1,3] => "foo", (3,6) => "bar", [6,10] => "foo"}
+        rangeMap.put(Range.open(10, 20), "foo"); //{[1,3] => "foo", (3,6) => "bar", [6,10] => "foo", (10,20) => "foo"}
+        rangeMap.remove(Range.closed(5, 11)); //{[1,3] => "foo", (3,5) => "bar", (11,20) => "foo"}
+    }
 
+    /**
+     * 集合工具类
+     */
+    public void collectionUtil() {
+        //Guava提供了能够推断范型的静态工厂方法：
+        List<User> list = Lists.newArrayList();
+        Map<String, User> map = Maps.newLinkedHashMap();
+        //用工厂方法模式，可以方便地在初始化时就指定起始元素
+        Set<String> copySet = Sets.newHashSet("XX");
+        List<String> theseElements = Lists.newArrayList("alpha", "beta", "gamma");
+        //通过为工厂方法命名（Effective Java第一条），可以提高集合初始化大小的可读性
+        List<String> exactly100 = Lists.newArrayListWithCapacity(100);
+        List<String> approx100 = Lists.newArrayListWithExpectedSize(100);
+        Set<String> approx100Set = Sets.newHashSetWithExpectedSize(100);
+        //Guava引入的新集合类型没有暴露原始构造器，也没有在工具类中提供初始化方法。而是直接在集合类中提供了静态工厂方法
+        Multiset<String> multiset = HashMultiset.create();
+        //串联多个iterables的懒视图
+        // concatenated包括元素 1, 2, 3, 4, 5, 6
+        Iterable<Integer> concatenated = Iterables.concat(Ints.asList(1, 2, 3), Ints.asList(4, 5, 6));
+        //获取iterable中唯一的元素，如果iterable为空或有多个元素，则快速失败
+        String theElement = Iterables.getOnlyElement(approx100);
+        //返回对象在iterable中出现的次数
+        Iterables.frequency(approx100, String.class);
+        //把iterable按指定大小分割，得到的子集都不能进行修改操作
+        Iterables.partition(approx100, 1);
+        //返回iterable的第一个元素，若iterable为空则返回默认值
+        Iterables.getFirst(approx100, String.class);
+        //返回iterable的最后一个元素，若iterable为空则抛出NoSuchElementException
+        String lastAdded = Iterables.getLast(approx100);
+        //如果两个iterable中的所有元素相等且顺序一致，返回true
+        Iterables.elementsEqual(approx100, approx100);
+        //返回iterable的不可变视图
+        Iterables.unmodifiableIterable(approx100);
+        //限制iterable的元素个数限制给定值
+        Iterables.limit(approx100, 1);
+        //==========================java中的对比==================
+        List<String> javaResults = list.stream()
+                .filter(User::isAgeEquleZero)
+                .map(Object::toString)
+                .limit(10)
+                .collect(Collectors.toList());
+        ImmutableList<String> results =
+                FluentIterable.from(list)
+                        .filter(User::isAgeEquleZero)
+                        .transform(Object::toString)
+                        .limit(10)
+                        .toList();
+        //==========================
+        list.contains(new User());
+        FluentIterable.from(list).contains(new User());
+        //===========================
+        list.size();
+        FluentIterable.from(list).size();
+        //还有很多，基本都有，自己去找，同时还提供把自己变成不可变集合
+        FluentIterable.from(list).toSet();
+        FluentIterable.from(list).toMap(User::getAge);
+        FluentIterable.from(list).toMultiset();
+        FluentIterable.from(list).toSortedSet((o1, o2) -> 0);
+        List countUp = Ints.asList(1, 2, 3, 4, 5);
+        List countDown = Lists.reverse(countUp);
+        List<List> parts = Lists.partition(countUp, 2);
+        //set工具方法
+        Set<String> wordsWithPrimeLength = ImmutableSet.of("one", "two", "three", "six", "seven", "eight");
+        Set<String> primes = ImmutableSet.of("two", "three", "five", "seven");
+        Sets.SetView<String> intersection = Sets.intersection(primes, wordsWithPrimeLength);
+        // intersection包含"two", "three", "seven"
+        intersection.immutableCopy();
+        //可以使用交集，但不可变拷贝的读取效率更高
+        Set<String> animals = ImmutableSet.of("gerbil", "hamster");
+        Set<String> fruits = ImmutableSet.of("apple", "orange", "banana");
+        Set<List<String>> product = Sets.cartesianProduct(animals, fruits);
+        // {{"gerbil", "apple"}, {"gerbil", "orange"}, {"gerbil", "banana"},
+        //  {"hamster", "apple"}, {"hamster", "orange"}, {"hamster", "banana"}}
+        Set<Set<String>> animalSets = Sets.powerSet(animals);
+        //Maps.uniqueIndex(Iterable,Function)通常针对的场景是：有一组对象，它们在某个属性上分别有独一无二的值，而我们希望能够按照这
+        // 个属性值查找对象——译者注：这个方法返回一个Map，键为Function返回的属性值，
+        // 值为Iterable中相应的元素，因此我们可以反复用这个Map进行查找操作。
+        //比方说，我们有一堆字符串，这些字符串的长度都是独一无二的，而我们希望能够按照特定长度查找字符串
+        ImmutableMap<Integer, String> stringsByIndex = Maps.uniqueIndex(Lists.asList("ab", "a", new String[]{"avb"}),
+                (Function<String, Integer>) string -> string.length());
+        //difference
+        Map<String, Integer> left = ImmutableMap.of("a", 1, "b", 2, "c", 3);
+        Map<String, Integer> right = ImmutableMap.of("a", 1, "b", 2, "c", 3);
+        MapDifference<String, Integer> diff = Maps.difference(left, right);
+        diff.entriesInCommon();
+        diff.entriesInCommon();
+        diff.entriesOnlyOnLeft();
+        diff.entriesOnlyOnRight();
+        //处理BiMap的工具方法
+        Collections.synchronizedMap(left);
+        Collections.unmodifiableMap(left);
+        //标准的Collection操作会忽略Multiset重复元素的个数，而只关心元素是否存在于Multiset中，
+        // 如containsAll方法。为此，Multisets提供了若干方法，以顾及Multiset元素的重复性：
+        Multiset<String> multiset1 = HashMultiset.create();
+        multiset1.add("a", 2);
+        Multiset<String> multiset2 = HashMultiset.create();
+        multiset2.add("a", 5);
+        //返回true；因为包含了所有不重复元素，
+        multiset1.containsAll(multiset2);
+        //虽然multiset1实际上包含2个"a"，而multiset2包含5个"a"
+        // returns false
+        Multisets.containsOccurrences(multiset1, multiset2);
+        //multiset2移除所有"a"，虽然multiset1只有2个"a"
+        multiset2.removeAll(multiset1);
+        // returns true
+        multiset2.isEmpty();
+        //返回Multiset的不可变拷贝，并将元素按重复出现的次数做降序排列
+        Multiset<String> multisets = HashMultiset.create();
+        multisets.add("a", 3);
+        multisets.add("b", 5);
+        multisets.add("c", 1);
+        ImmutableMultiset highestCountFirst = Multisets.copyHighestCountFirst(multisets);
+        //字符串按长度分组
+        ImmutableSet digits = ImmutableSet.of("zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine");
+        Function<String, Integer> lengthFunction = string -> string.length();
+        ImmutableListMultimap<Integer, String> digitsByLength = Multimaps.index(digits, lengthFunction);
+        //鉴于Multimap可以把多个键映射到同一个值（译者注：实际上这是任何map都有的特性），
+        // 也可以把一个键映射到多个值，反转Multimap也会很有用。Guava 提供了invertFrom(Multimap toInvert,Multimap dest)做这个操作
+        // ，并且你可以自由选择反转后的Multimap实现。
+        ArrayListMultimap<String, Integer> multimap = ArrayListMultimap.create();
+        multimap.putAll("b", Ints.asList(2, 4, 6));
+        multimap.putAll("a", Ints.asList(4, 2, 1));
+        multimap.putAll("c", Ints.asList(2, 5, 3));
+        // 使用LinkedHashMaps替代HashMaps
+        Table<String, Character, Integer> table = Tables.newCustomTable(
+                Maps.<String, Map<Character, Integer>>newLinkedHashMap(),
+                () -> Maps.newLinkedHashMap());
+        //方法允许你把Table<C, R, V>转置成Table<R, C, V>。例如，如果你在用Table构建加权有向图，这个方法就可以把有向图反转
+        Tables.transpose(table);
+        //复制一个List，并去除连续的重复元素。
+        List<String> result = Lists.newArrayList();
+        PeekingIterator<String> iter = Iterators.peekingIterator(result.iterator());
+        while (iter.hasNext()) {
+            String current = iter.next();
+            while (iter.hasNext() && iter.peek().equals(current)) {
+                //跳过重复的元素
+                iter.next();
+            }
+            result.add(current);
+        }
+        //包装一个iterator以跳过空值
+        skipNulls(digits.iterator());
+    }
+
+    public static Iterator<String> skipNulls(final Iterator<String> in) {
+        return new AbstractIterator<String>() {
+            @Override
+            protected String computeNext() {
+                while (in.hasNext()) {
+                    String s = in.next();
+                    if (s != null) {
+                        return s;
+                    }
+                }
+                return endOfData();
+            }
+        };
     }
 
 
-    private class User implements Comparable<User> {
+    public static class User implements Comparable<User> {
 
         private String name;
         private Integer age;
@@ -197,6 +455,10 @@ public class GuavaTest {
         @Override
         public int hashCode() {
             return Objects.hashCode(name, age);
+        }
+
+        public static Boolean isAgeEquleZero(User user) {
+            return user.getAge() != 0;
         }
     }
 }
