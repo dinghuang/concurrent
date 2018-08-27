@@ -1,6 +1,4 @@
-package com.example.demo.test;
-
-import org.springframework.beans.factory.annotation.Autowired;
+package com.example.demo.concurrent;
 
 import java.util.ArrayList;
 import java.util.List;

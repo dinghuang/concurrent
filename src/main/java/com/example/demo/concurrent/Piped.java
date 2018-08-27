@@ -1,4 +1,4 @@
-package com.example.demo.test;
+package com.example.demo.concurrent;
 
 import java.io.IOException;
 import java.io.PipedReader;

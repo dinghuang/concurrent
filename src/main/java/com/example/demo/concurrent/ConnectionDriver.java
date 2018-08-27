@@ -1,4 +1,4 @@
-package com.example.demo.test;
+package com.example.demo.concurrent;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

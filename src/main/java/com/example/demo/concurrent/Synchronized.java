@@ -1,4 +1,4 @@
-package com.example.demo.test;
+package com.example.demo.concurrent;
 
 /**
  * 通过在Synchronized.class同级目录下执行javap -v Synchronized.class查看生成的class文件来分析

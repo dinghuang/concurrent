@@ -1,4 +1,4 @@
-package com.example.demo.test;
+package com.example.demo.concurrent;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;

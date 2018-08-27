@@ -1,7 +1,6 @@
-package com.example.demo.test;
+package com.example.demo.concurrent;
 
 import com.example.demo.util.SleepUtils;
-import com.sun.deploy.util.Waiter;
 
 /**
  * 使用jstack工具查看线程信息
