@@ -10,14 +10,13 @@ import java.util.List;
  */
 public class AlphabeticallySort {
       public static void main(String[] args) {
-        String min = "0|aaaa";
-        String max = "0|aaab";
-        String middleNum = generateMiddleNum(max, min, 4);
+        String min = "0|asd111111111111";
+        String max = "0|weq";
+        String middleNum = generateMiddleNum(max, min, 100);
         List<String> sort = new ArrayList<>();
         sort.add(max);
         sort.add(min);
         sort.add(middleNum);
-        System.out.println(middleNum);
         Collections.sort(sort, String.CASE_INSENSITIVE_ORDER);
         System.out.println(sort.toString());
     }
@@ -40,7 +39,7 @@ public class AlphabeticallySort {
         } else {
             char c = max.charAt(max.length() - 1);
             c--;
-            return min + (char) c;
+            return min + c;
         }
     }
 
