@@ -9,7 +9,6 @@ public interface Stack<E> {
     /**
      * 获取栈的大小
      *
-     * @param
      * @return int
      */
     int getSize();
@@ -17,7 +16,6 @@ public interface Stack<E> {
     /**
      * 判断栈是否为空
      *
-     * @param
      * @return boolean
      */
     boolean isEmpty();
@@ -25,15 +23,13 @@ public interface Stack<E> {
     /**
      * 向栈中插入一个元素
      *
-     * @param e
-     * @return void
+     * @param e e
      */
     void push(E e);
 
     /**
      * 向栈中移除一个元素
      *
-     * @param
      * @return E
      */
     E pop();
@@ -41,7 +37,6 @@ public interface Stack<E> {
     /**
      * 查看栈顶元素
      *
-     * @param
      * @return E
      */
     E peek();

@@ -11,7 +11,6 @@ public interface Queue<E> {
     /**
      * 获取队列的大小
      *
-     * @param
      * @return int
      */
     int getSize();
@@ -19,7 +18,6 @@ public interface Queue<E> {
     /**
      * 查看队列是否为空
      *
-     * @param
      * @return boolean
      */
     boolean isEmpty();
@@ -27,15 +25,13 @@ public interface Queue<E> {
     /**
      * 将一个元素插入队尾
      *
-     * @param e
-     * @return void
+     * @param e e
      */
     void enqueue(E e);
 
     /**
      * 将队首一个元素移除队列
      *
-     * @param
      * @return E
      */
     E dequeue();
@@ -43,7 +39,6 @@ public interface Queue<E> {
     /**
      * 获取队首的一个元素
      *
-     * @param
      * @return E
      */
     E getFront();

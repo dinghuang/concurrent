@@ -33,16 +33,32 @@ public class ArrayStack<E> implements Stack<E> {
         return array.getCapacity();
     }
 
+    /**
+     * 向栈中插入一个元素
+     *
+     * @param e e
+     */
     @Override
     public void push(E e) {
         array.addLast(e);
     }
 
+    /**
+     * 向栈中移除一个元素
+     * 栈的先进先出
+     *
+     * @return E
+     */
     @Override
     public E pop() {
         return array.removeLast();
     }
 
+    /**
+     * 查看栈顶元素
+     *
+     * @return E
+     */
     @Override
     public E peek() {
         return array.getLast();
@@ -51,7 +67,7 @@ public class ArrayStack<E> implements Stack<E> {
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-        result.append(String.format("Stack: size = %d , capacity = %d\n", array.getSize(), array.getCapacity()));
+        result.append(String.format("Stack: size = %d , capacity = %d%n", array.getSize(), array.getCapacity()));
         result.append("[");
         for (int i = 0; i < array.getSize(); i++) {
             result.append(array.get(i));

@@ -32,16 +32,31 @@ public class ArrayQueue<E> implements Queue<E> {
         return array.isEmpty();
     }
 
+    /**
+     * 将一个元素插入队尾
+     *
+     * @param e e
+     */
     @Override
     public void enqueue(E e) {
         array.addLast(e);
     }
 
+    /**
+     * 将队首一个元素移除队列
+     *
+     * @return E
+     */
     @Override
     public E dequeue() {
         return array.removeFirst();
     }
 
+    /**
+     * 获取队首的一个元素
+     *
+     * @return E
+     */
     @Override
     public E getFront() {
         return array.getFirst();

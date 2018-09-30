@@ -9,9 +9,14 @@ package com.example.demo.algorithm;
  */
 public class ArrayUnionFind implements UnionFind {
 
-    //存储当前位置元素的根节点
+    /**
+     * 存储当前位置元素的根节点
+     */
     private int[] parent;
-    //表示以当前元素为根节点的高度
+
+    /**
+     * 表示以当前元素为根节点的高度
+     */
     private int[] rank;
 
     public ArrayUnionFind(int size) {
@@ -31,7 +36,7 @@ public class ArrayUnionFind implements UnionFind {
     /**
      * 查找元素p所对应的根节点
      *
-     * @param p
+     * @param p p
      * @return int
      */
     private int find(int p) {
@@ -50,6 +55,12 @@ public class ArrayUnionFind implements UnionFind {
         return find(p) == find(q);
     }
 
+    /**
+     * 将两个元素并在一起
+     *
+     * @param p p
+     * @param q q
+     */
     @Override
     public void unionElements(int p, int q) {
         int pRoot = find(p);
