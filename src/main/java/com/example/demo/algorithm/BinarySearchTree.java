@@ -16,7 +16,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
     private Node root;
     private int size;
 
-    public BinarySearchTree() {
+    BinarySearchTree() {
         root = null;
         size = 0;
     }
@@ -37,7 +37,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
     /**
      * 向二分搜索树中添加元素
      *
-     * @param e
+     * @param e e
      */
     public void add(E e) {
         root = add(root, e);
@@ -47,12 +47,12 @@ public class BinarySearchTree<E extends Comparable<E>> {
      * 向node为根元素的二分搜索树中插入元素
      * 递归算法
      *
-     * @param node
-     * @param e
+     * @param node node
+     * @param e    e
      */
     @Deprecated
     private void addDeprecated(Node node, E e) {
-        /** 递归终止条件：判断根节点、根a节点的左右节点是否为空*/
+        //递归终止条件：判断根节点、根a节点的左右节点是否为空
         if (e.equals(node.e)) {
             return;
         } else if (e.compareTo(node.e) < 0 && node.left == null) {
@@ -76,8 +76,8 @@ public class BinarySearchTree<E extends Comparable<E>> {
      * 向node为根元素的二分搜索树中插入元素
      * 递归算法
      *
-     * @param node
-     * @param e
+     * @param node node
+     * @param e    e
      */
     private Node add(Node node, E e) {
         //递归终止条件，返回结果为null
@@ -97,7 +97,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
     /**
      * 判断二分搜索树是否包含某个元素
      *
-     * @param e
+     * @param e e
      * @return boolean
      */
     public boolean contains(E e) {
@@ -107,8 +107,8 @@ public class BinarySearchTree<E extends Comparable<E>> {
     /**
      * 判断以node为根元素的二分搜索树是否包含某个元素
      *
-     * @param node
-     * @param e
+     * @param node node
+     * @param e    e
      * @return boolean
      */
     private boolean contains(Node node, E e) {
@@ -119,16 +119,14 @@ public class BinarySearchTree<E extends Comparable<E>> {
             return true;
         } else if (e.compareTo(node.e) < 0) {
             return contains(node.left, e);
-        } else /*if(e.compareTo(node.e) < 0)*/ {
+        } else if (e.compareTo(node.e) > 0) {
             return contains(node.right, e);
         }
+        return false;
     }
 
     /**
      * 前序遍历二分搜索树
-     *
-     * @param
-     * @return void
      */
     public void preOrder() {
         preOrder(root);
@@ -138,14 +136,12 @@ public class BinarySearchTree<E extends Comparable<E>> {
      * 前序遍历以node为根节点的二分搜索树
      * 深度优先遍历，递归实现
      *
-     * @param node
-     * @return void
+     * @param node node
      */
     private void preOrder(Node node) {
         if (node == null) {
             return;
         }
-        System.out.println(node.e);
         preOrder(node.left);
         preOrder(node.right);
     }
@@ -153,16 +149,13 @@ public class BinarySearchTree<E extends Comparable<E>> {
     /**
      * 前序遍历二分搜索树
      * 深度优先遍历，非递归实现，利用栈结构
-     *
-     * @param
-     * @return void
      */
+    @SuppressWarnings("unchecked")
     public void preOrderNR() {
         Stack<Node> stack = new Stack<>();
         stack.push(root);
         while (!stack.isEmpty()) {
             Node cur = stack.pop();
-            System.out.println(cur.e);
             if (cur.right != null) {
                 stack.push(cur.right);
             }
@@ -183,14 +176,13 @@ public class BinarySearchTree<E extends Comparable<E>> {
      * 中序遍历以node为根节点的二分搜索树
      * 深度优先遍历，递归实现
      *
-     * @param node
+     * @param node node
      */
     private void inOrder(Node node) {
         if (node == null) {
             return;
         }
         inOrder(node.left);
-        System.out.println(node.e);
         inOrder(node.right);
     }
 
@@ -205,7 +197,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
      * 后序遍历以node为根节点的二分搜索树
      * 深度优先遍历，递归实现
      *
-     * @param node
+     * @param node node
      */
     private void postOrder(Node node) {
         if (node == null) {
@@ -213,7 +205,6 @@ public class BinarySearchTree<E extends Comparable<E>> {
         }
         postOrder(node.left);
         postOrder(node.right);
-        System.out.println(node.e);
     }
 
     /**
@@ -225,7 +216,6 @@ public class BinarySearchTree<E extends Comparable<E>> {
         nodeQueue.add(root);
         while (!nodeQueue.isEmpty()) {
             Node cur = nodeQueue.poll();
-            System.out.println(cur.e);
             if (cur.left != null) {
                 nodeQueue.add(cur.left);
             }
@@ -240,7 +230,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
      *
      * @return E
      */
-    public E minimum() {
+    private E minimum() {
         if (isEmpty()) {
             throw new IllegalArgumentException("BinarySearchTree is empty !");
         }
@@ -251,7 +241,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
      * 查找以node为根节点二分搜索树的最小节点
      * 深度优先遍历，递归实现
      *
-     * @param node
+     * @param node node
      * @return BinarySearchTree<E>.Node
      */
     private Node minimum(Node node) {
@@ -269,7 +259,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
      *
      * @return E
      */
-    public E maximize() {
+    private E maximize() {
         if (isEmpty()) {
             throw new IllegalArgumentException("BinarySearchTree is empty !");
         }
@@ -280,7 +270,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
      * 查找以node为根节点二分搜索树的最大节点
      * 深度优先遍历，递归实现
      *
-     * @param node
+     * @param node node
      * @return BinarySearchTree<E>.Node
      */
     private Node maximize(Node node) {
@@ -296,7 +286,6 @@ public class BinarySearchTree<E extends Comparable<E>> {
     /**
      * 删除二分搜索树的最大值
      *
-     * @param
      * @return BinarySearchTree<E>.Node
      */
     public E removeMax() {
@@ -309,7 +298,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
      * 删除以node为根的二分搜索树的最大节点
      * 深度优先遍历，递归实现
      *
-     * @param node
+     * @param node node
      * @return BinarySearchTree<E>.Node
      */
     private Node removeMax(Node node) {
@@ -326,7 +315,6 @@ public class BinarySearchTree<E extends Comparable<E>> {
     /**
      * 删除二分搜索树的最小值
      *
-     * @param
      * @return BinarySearchTree<E>.Node
      */
     public E removeMin() {
@@ -339,7 +327,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
      * 删除以node为根的二分搜索树的最小节点
      * 深度优先遍历，递归实现
      *
-     * @param node
+     * @param node node
      * @return BinarySearchTree<E>.Node
      */
     private Node removeMin(Node node) {
@@ -356,7 +344,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
     /**
      * 删除二分搜索树中的指定元素
      *
-     * @param e
+     * @param e e
      */
     public void remove(E e) {
         root = remove(root, e);
@@ -366,8 +354,8 @@ public class BinarySearchTree<E extends Comparable<E>> {
      * 删除以node为根的二分搜索树中的指定元素
      * 深度优先遍历，递归实现
      *
-     * @param node
-     * @param e
+     * @param node node
+     * @param e    e
      * @return BinarySearchTree<E>.Node
      */
     private Node remove(Node node, E e) {
@@ -380,7 +368,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
         } else if (e.compareTo(node.e) > 0) {
             node.right = remove(node.right, e);
             return node;
-        } else /*if(e.compareTo(node.e) == 0)*/ {
+        } else if (e.compareTo(node.e) == 0) {
             // 删除右子树为空的情况
             if (node.right == null) {
                 Node leftNode = node.left;
@@ -433,13 +421,13 @@ public class BinarySearchTree<E extends Comparable<E>> {
     /**
      * 生成二分搜索树的字符
      *
-     * @param node
-     * @param depth
-     * @param result
+     * @param node   node
+     * @param depth  depth
+     * @param result result
      */
     private void generateBSTString(Node node, int depth, StringBuilder result) {
         if (node == null) {
-            result.append(generateBSTString(depth) + "null\n");
+            result.append(generateBSTString(depth)).append("null\n");
             return;
         }
         result.append(generateBSTString(depth) + node.e + "\n");
@@ -449,9 +437,10 @@ public class BinarySearchTree<E extends Comparable<E>> {
 
     /**
      * 生成表示深度的字符
+     * depth
      *
-     * @param depth
-     * @return java.lang.String
+     * @param depth depth
+     * @return String
      */
     private String generateBSTString(int depth) {
         StringBuilder result = new StringBuilder();

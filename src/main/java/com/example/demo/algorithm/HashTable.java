@@ -12,21 +12,21 @@ public class HashTable<K, V> {
     /**
      * 最大容忍度，及上界
      */
-    public static final int upperTol = 10;
+    private static final int upperTol = 10;
     /**
      * 最小容忍度，及下界
      */
-    public static final int lowerTol = 2;
+    private static final int lowerTol = 2;
     /**
      * 初始化容量
      */
-    public static final int initCapacity = 7;
+    private static final int initCapacity = 7;
 
     private TreeMap<K, V>[] hashTable;
     private int M;
     private int size;
 
-    public HashTable(int M) {
+    private HashTable(int M) {
         this.M = M;
         size = 0;
         hashTable = new TreeMap[M];
@@ -54,8 +54,8 @@ public class HashTable<K, V> {
     /**
      * 向哈希表中添加元素
      *
-     * @param key
-     * @param value
+     * @param key   key
+     * @param value value
      */
     public void add(K key, V value) {
         TreeMap<K, V> treeMap = hashTable[hash(key)];
@@ -75,8 +75,8 @@ public class HashTable<K, V> {
     /**
      * 从哈希表中移除元素
      *
-     * @param key
-     * @return V
+     * @param key key
+     * @return V   V
      */
     public V remove(K key) {
         TreeMap<K, V> treeMap = hashTable[hash(key)];
@@ -96,12 +96,11 @@ public class HashTable<K, V> {
     /**
      * 修改哈希表中的元素
      *
-     * @param key
-     * @param value
+     * @param key   key
+     * @param value value
      */
     public void set(K key, V value) {
         TreeMap<K, V> treeMap = hashTable[hash(key)];
-        V result = null;
         if (!treeMap.containsKey(key)) {
             throw new IllegalArgumentException(key + "doesn't exists!");
         }
@@ -111,7 +110,7 @@ public class HashTable<K, V> {
     /**
      * 查询哈希表中是否包含某个元素
      *
-     * @param key
+     * @param key key
      * @return boolean
      */
     public boolean contains(K key) {
@@ -121,7 +120,7 @@ public class HashTable<K, V> {
     /**
      * 从哈希表中获取一个元素
      *
-     * @param key
+     * @param key key
      * @return V
      */
     public V get(K key) {
@@ -131,9 +130,9 @@ public class HashTable<K, V> {
     /**
      * 修改容量
      *
-     * @param newCapacity
-     * @return void
+     * @param newCapacity newCapacity
      */
+    @SuppressWarnings("unchecked")
     private void resize(int newCapacity) {
         TreeMap<K, V>[] newHashTable = new TreeMap[newCapacity];
         for (int i = 0; i < newCapacity; i++) {

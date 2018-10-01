@@ -24,9 +24,9 @@ public class BinarySearchTreeMap<K extends Comparable<K>, V> implements Map<K, V
      * 向node为根元素的二分搜索树中插入元素
      * 递归算法
      *
-     * @param node
-     * @param key
-     * @param value
+     * @param node  node
+     * @param key   key
+     * @param value value
      */
     private Node add(Node node, K key, V value) {
         //递归终止条件，返回结果为null
@@ -48,10 +48,9 @@ public class BinarySearchTreeMap<K extends Comparable<K>, V> implements Map<K, V
     /**
      * 查找二分搜索树的最小值
      *
-     * @param
      * @return V
      */
-    public V minimum() {
+    private V minimum() {
         if (isEmpty()) {
             throw new IllegalArgumentException("BinarySearchTree is empty !");
         }
@@ -62,7 +61,7 @@ public class BinarySearchTreeMap<K extends Comparable<K>, V> implements Map<K, V
      * 查找以node为根节点二分搜索树的最小节点
      * 深度优先遍历，递归实现
      *
-     * @param node
+     * @param node node
      * @return BinarySearchTree<E>.Node
      */
     private Node minimum(Node node) {
@@ -78,10 +77,9 @@ public class BinarySearchTreeMap<K extends Comparable<K>, V> implements Map<K, V
     /**
      * 查找二分搜索树的最大值
      *
-     * @param
      * @return V
      */
-    public V maximize() {
+    private V maximize() {
         if (isEmpty()) {
             throw new IllegalArgumentException("BinarySearchTree is empty !");
         }
@@ -92,7 +90,7 @@ public class BinarySearchTreeMap<K extends Comparable<K>, V> implements Map<K, V
      * 查找以node为根节点二分搜索树的最大节点
      * 深度优先遍历，递归实现
      *
-     * @param node
+     * @param node node
      * @return BinarySearchTree<E>.Node
      */
     private Node maximize(Node node) {
@@ -108,7 +106,6 @@ public class BinarySearchTreeMap<K extends Comparable<K>, V> implements Map<K, V
     /**
      * 删除二分搜索树的最大值
      *
-     * @param
      * @return V
      */
     public V removeMax() {
@@ -181,8 +178,8 @@ public class BinarySearchTreeMap<K extends Comparable<K>, V> implements Map<K, V
      * 删除以node为根的二分搜索树中的指定元素
      * 深度优先遍历，递归实现
      *
-     * @param node
-     * @param key
+     * @param node node
+     * @param key  key
      * @return BinarySearchTree<E>.Node
      */
     private Node remove(Node node, K key) {
@@ -195,7 +192,7 @@ public class BinarySearchTreeMap<K extends Comparable<K>, V> implements Map<K, V
         } else if (key.compareTo(node.key) > 0) {
             node.right = remove(node.right, key);
             return node;
-        } else /*if(key.compareTo(node.key) == 0)*/ {
+        } else if (key.compareTo(node.key) == 0) {
             // 删除右子树为空的情况
             if (node.right == null) {
                 Node leftNode = node.left;
@@ -271,11 +268,11 @@ public class BinarySearchTreeMap<K extends Comparable<K>, V> implements Map<K, V
     /**
      * 根据key获取Node
      *
-     * @param node
-     * @param key
-     * @return map.LinkedListMap<K       ,       V>.Node
+     * @param node node
+     * @param key  key
+     * @return Node
      */
-    public Node getNode(Node node, K key) {
+    private Node getNode(Node node, K key) {
         if (node == null) {
             return null;
         }
@@ -296,9 +293,9 @@ public class BinarySearchTreeMap<K extends Comparable<K>, V> implements Map<K, V
     private class Node {
         public K key;
         public V value;
-        public Node left, right;
+        Node left, right;
 
-        public Node(K key, V value) {
+        Node(K key, V value) {
             this.key = key;
             this.value = value;
             left = null;
