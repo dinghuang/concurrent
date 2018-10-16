@@ -8,7 +8,7 @@ package com.example.demo.algorithm;
  */
 public class LinkedListQueue<E> implements Queue<E> {
 
-    LinkedList<E> list;
+    private LinkedList<E> list;
 
     public LinkedListQueue() {
         list = new LinkedList<>();
@@ -41,11 +41,9 @@ public class LinkedListQueue<E> implements Queue<E> {
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
-        result.append(String.format("Queue: size = %d \n", list.getSize()));
-        result.append("front [");
-        result.append(list);
-        result.append("] tail");
-        return result.toString();
+        return String.format("Queue: size = %d %n", list.getSize()) +
+                "front [" +
+                list +
+                "] tail";
     }
 }

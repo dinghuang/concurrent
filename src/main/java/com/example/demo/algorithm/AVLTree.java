@@ -363,7 +363,7 @@ public class AVLTree<K extends Comparable<K>, V> {
             return null;
         }
 
-        Node resultNode;
+        Node resultNode = null;
 
         if (key.compareTo(node.key) < 0) {
             node.left = remove(node.left, key);

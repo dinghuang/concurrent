@@ -14,7 +14,8 @@ public class LoopQueue<E> implements Queue<E> {
 
     private int size;
 
-    public LoopQueue(int capacity) {
+    @SuppressWarnings("unchecked")
+    private LoopQueue(int capacity) {
         data = (E[]) new Object[capacity + 1];
         front = 0;
         tail = 0;
@@ -30,7 +31,7 @@ public class LoopQueue<E> implements Queue<E> {
         return size;
     }
 
-    public int getCapacity() {
+    private int getCapacity() {
         return data.length - 1;
     }
 
@@ -51,6 +52,7 @@ public class LoopQueue<E> implements Queue<E> {
         size++;
     }
 
+    @SuppressWarnings("unchecked")
     private void resize(int newCapacity) {
         E[] newData = (E[]) new Object[newCapacity + 1];
         for (int i = 0; i < size; i++) {
@@ -88,7 +90,7 @@ public class LoopQueue<E> implements Queue<E> {
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-        result.append(String.format("Queue: size = %d , capacity = %d\n", size, data.length));
+        result.append(String.format("Queue: size = %d , capacity = %d%n", size, data.length));
         result.append("front [");
         for (int i = front; i != tail; i = (i + 1) % data.length) {
             result.append(data[i]);

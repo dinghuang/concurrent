@@ -409,6 +409,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
                  */
             }
         }
+        return node;
     }
 
     @Override

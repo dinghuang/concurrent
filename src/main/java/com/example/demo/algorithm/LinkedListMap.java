@@ -91,10 +91,8 @@ public class LinkedListMap<K, V> implements Map<K, V> {
     /**
      * 根据key获取Node
      *
-     * @param key
-     * @return map.LinkedListMap<K       ,       V>.Node
-     * @author ronglexie
-     * @version 2018/8/19
+     * @param key key
+     * @return Node
      */
     private Node getNode(K key) {
         Node cur = dummyHead.next;
@@ -113,7 +111,7 @@ public class LinkedListMap<K, V> implements Map<K, V> {
         private V value;
         private Node next;
 
-        public Node(K key, V value, Node next) {
+        Node(K key, V value, Node next) {
             this.key = key;
             this.value = value;
             this.next = next;

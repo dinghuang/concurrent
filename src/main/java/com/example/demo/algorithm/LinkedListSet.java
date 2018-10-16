@@ -15,6 +15,7 @@ public class LinkedListSet<E> implements Set<E> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void add(E e) {
         if (!linkedList.contains(e)) {
             linkedList.addFirst(e);
@@ -22,11 +23,13 @@ public class LinkedListSet<E> implements Set<E> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void remove(E e) {
         linkedList.remove(e);
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean contains(E e) {
         return linkedList.contains(e);
     }

@@ -30,10 +30,10 @@ public class MinHeap<E extends Comparable<E>> {
     /**
      * 查找用数组实现的完全二叉树中该索引下节点的父亲节点的索引
      *
-     * @param index
+     * @param index index
      * @return int
      */
-    public int parent(int index) {
+    private int parent(int index) {
         if (index == 0) {
             throw new IllegalArgumentException("root doesn't have parent.");
         }
@@ -43,27 +43,27 @@ public class MinHeap<E extends Comparable<E>> {
     /**
      * 查找用数组实现的完全二叉树中该索引下节点的左孩子节点的索引
      *
-     * @param index
+     * @param index index
      * @return int
      */
-    public int leftChild(int index) {
+    private int leftChild(int index) {
         return (index * 2) + 1;
     }
 
     /**
      * 查找用数组实现的完全二叉树中该索引下节点的右孩子节点的索引
      *
-     * @param index
+     * @param index index
      * @return int
      */
-    public int rightChild(int index) {
+    private int rightChild(int index) {
         return (index * 2) + 2;
     }
 
     /**
      * 向最大堆中添加元素
      *
-     * @param e
+     * @param e e
      */
     public void add(E e) {
         data.addLast(e);
@@ -73,7 +73,7 @@ public class MinHeap<E extends Comparable<E>> {
     /**
      * 上浮节点
      *
-     * @param k
+     * @param k k
      */
     private void shifUp(int k) {
         while (k > 0 && data.get(parent(k)).compareTo(data.get(k)) > 0) {
@@ -87,7 +87,7 @@ public class MinHeap<E extends Comparable<E>> {
      *
      * @return E
      */
-    public E findMin() {
+    private E findMin() {
         if (data.getSize() == 0) {
             throw new IllegalArgumentException("FindMax failed. heap is empty.");
         }
@@ -112,7 +112,7 @@ public class MinHeap<E extends Comparable<E>> {
     /**
      * 下沉节点
      *
-     * @param k
+     * @param k k
      */
     private void siftDown(int k) {
         while (k >= 0 && leftChild(k) < data.getSize()) {

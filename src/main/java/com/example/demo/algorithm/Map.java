@@ -9,15 +9,15 @@ public interface Map<K, V> {
     /**
      * 添加元素
      *
-     * @param key
-     * @param value
+     * @param key   key
+     * @param value value
      */
     void add(K key, V value);
 
     /**
      * 删除元素
      *
-     * @param key
+     * @param key key
      * @return V
      */
     V remove(K key);
@@ -25,7 +25,7 @@ public interface Map<K, V> {
     /**
      * 查看是否包含某个key
      *
-     * @param key
+     * @param key key
      * @return boolean
      */
     boolean contains(K key);
@@ -33,7 +33,7 @@ public interface Map<K, V> {
     /**
      * 获取某个key对应的value
      *
-     * @param key
+     * @param key key
      * @return V
      */
     V get(K key);
@@ -41,15 +41,14 @@ public interface Map<K, V> {
     /**
      * 更新某个key对应的value
      *
-     * @param key
-     * @param value
+     * @param key   key
+     * @param value value
      */
     void set(K key, V value);
 
     /**
      * 获取大小
      *
-     * @param
      * @return int
      */
     int getSize();
@@ -57,7 +56,6 @@ public interface Map<K, V> {
     /**
      * 查看是否为空
      *
-     * @param
      * @return boolean
      */
     boolean isEmpty();

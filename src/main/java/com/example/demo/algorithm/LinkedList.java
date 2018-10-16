@@ -18,7 +18,7 @@ public class LinkedList<E> {
      */
     private int size;
 
-    public LinkedList() {
+    LinkedList() {
         dummyHead = new Node(null, null);
         size = 0;
     }
@@ -34,8 +34,8 @@ public class LinkedList<E> {
     /**
      * 向链表指定位置添加元素
      *
-     * @param index
-     * @param e
+     * @param index index
+     * @param e     e
      */
     public void add(int index, E e) {
         if (index < 0 || index > size) {
@@ -54,16 +54,16 @@ public class LinkedList<E> {
     /**
      * 向链表头添加元素
      *
-     * @param e
+     * @param e e
      */
-    public void addFirst(E e) {
+    void addFirst(E e) {
         add(0, e);
     }
 
     /**
      * 向链表尾部添加元素
      *
-     * @param e
+     * @param e e
      */
     public void addLast(E e) {
         add(size, e);
@@ -72,7 +72,7 @@ public class LinkedList<E> {
     /**
      * 获取指定位置元素
      *
-     * @param index
+     * @param index index
      * @return E
      */
     public E get(int index) {
@@ -89,19 +89,15 @@ public class LinkedList<E> {
     /**
      * 获取链表头部的元素
      *
-     * @param
      * @return E
-     * @author ronglexie
-     * @version 2018/8/12
      */
-    public E getFirst() {
+    E getFirst() {
         return get(0);
     }
 
     /**
      * 获取链表尾部的元素
      *
-     * @param
      * @return E
      */
     public E getLast() {
@@ -111,9 +107,8 @@ public class LinkedList<E> {
     /**
      * 修改指定位置的元素
      *
-     * @param index
-     * @param e
-     * @return void
+     * @param index index
+     * @param e     e
      */
     public void set(int index, E e) {
         if (index < 0 || index > size) {
@@ -129,7 +124,7 @@ public class LinkedList<E> {
     /**
      * 判断链表是否包含某个元素
      *
-     * @param e
+     * @param e e
      * @return boolean
      */
     public boolean contains(E e) {
@@ -146,8 +141,7 @@ public class LinkedList<E> {
     /**
      * 删除指定位置的元素
      *
-     * @param index
-     * @return void
+     * @param index index
      */
     public E remove(int index) {
         if (index < 0 || index > size) {
@@ -167,7 +161,7 @@ public class LinkedList<E> {
     /**
      * 删除指定元素
      *
-     * @return void
+     * @param e e
      */
     public void remove(E e) {
         if (!contains(e)) {
@@ -191,8 +185,6 @@ public class LinkedList<E> {
 
     /**
      * 删除所有的指定元素
-     *
-     * @return void
      */
     public void removeAll(E e) {
         if (!contains(e)) {
@@ -214,17 +206,15 @@ public class LinkedList<E> {
     /**
      * 删除链表头部的元素
      *
-     * @param
      * @return E
      */
-    public E removeFirst() {
+    E removeFirst() {
         return remove(0);
     }
 
     /**
      * 删除链表尾部的元素
      *
-     * @param
      * @return E
      */
     public E removeLast() {
@@ -234,11 +224,11 @@ public class LinkedList<E> {
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-        result.append(String.format("LinkedList: size: %d\n", size));
+        result.append(String.format("LinkedList: size: %d%n", size));
         result.append("head ");
         Node cur = dummyHead.next;
         while (cur != null) {
-            result.append(cur + "->");
+            result.append(cur).append("->");
             cur = cur.next;
         }
         result.append("NULL");
@@ -250,7 +240,7 @@ public class LinkedList<E> {
         private E e;
         private Node next;
 
-        public Node(E e, Node next) {
+        Node(E e, Node next) {
             this.e = e;
             this.next = next;
         }

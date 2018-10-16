@@ -233,6 +233,7 @@ public class BinarySearchTreeMap<K extends Comparable<K>, V> implements Map<K, V
                  */
             }
         }
+        return node;
     }
 
     @Override

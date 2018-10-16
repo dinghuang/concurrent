@@ -37,8 +37,9 @@ public class FastFailTest {
         System.out.println(199>>1);
         System.out.println(199>>>1);
         System.out.println(1 << 30);
-        System.out.println(tableSizeFor(1025));
-        System.out.println(arrToStr(new String[]{"a","b","c"}));
+        System.out.println(2 << 4);
+//        System.out.println(tableSizeFor(1025));
+//        System.out.println(arrToStr(new String[]{"a","b","c"}));
     }
 
     public static String arrToStr(String[] params) {

@@ -11,8 +11,8 @@ public interface Merger<E> {
     /**
      * 融合两个元素
      *
-     * @param a
-     * @param b
+     * @param a a
+     * @param b b
      * @return E
      */
     E merge(E a, E b);

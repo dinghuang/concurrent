@@ -42,11 +42,9 @@ public class LinkedListStack<E> implements Stack<E> {
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
-        result.append(String.format("Stack: size = %d \n", list.getSize()));
-        result.append("top ");
-        result.append(list);
-        return result.toString();
+        return String.format("Stack: size = %d %n", list.getSize()) +
+                "top " +
+                list;
     }
 }
 

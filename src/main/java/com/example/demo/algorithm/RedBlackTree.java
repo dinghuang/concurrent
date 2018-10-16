@@ -9,13 +9,13 @@ package com.example.demo.algorithm;
  */
 public class RedBlackTree<K extends Comparable<K>, V> {
 
-    public static final boolean RED = true;
-    public static final boolean BLACK = false;
+    private static final boolean RED = true;
+    private static final boolean BLACK = false;
 
     private Node root;
     private int size;
 
-    public RedBlackTree() {
+    RedBlackTree() {
         root = null;
         size = 0;
     }
@@ -23,14 +23,14 @@ public class RedBlackTree<K extends Comparable<K>, V> {
     /**
      * 左旋转
      *
-     * @param node
+     * @param node node
      * @return RedBlackTree
      */
-    //   node                     x
-    //  /   \     左旋转         /  \
-    // T1   x   --------->   node   T3
-    //     / \              /   \
-    //    T2 T3            T1   T2
+    //   node                      x（黑）
+    //  /   \     左旋转         /     \
+    // T1（黑）x(红)   --------->node(红)   T3
+    //       / \              /   \
+    //      T2 T3            T1   T2
     private Node leftRotate(Node node) {
         Node x = node.right;
         //左旋转操作
@@ -44,10 +44,7 @@ public class RedBlackTree<K extends Comparable<K>, V> {
     /**
      * 颜色翻转
      *
-     * @param node
-     * @return void
-     * @author ronglexie
-     * @version 2018/9/2
+     * @param node node
      */
     private void flipColors(Node node) {
         node.color = RED;
@@ -58,14 +55,14 @@ public class RedBlackTree<K extends Comparable<K>, V> {
     /**
      * 右旋转
      *
-     * @param node
+     * @param node node
      * @return RedBlackTree
      */
     //     node                   x
     //    /   \     右旋转       /  \
-    //   x    T2   ------->   y   node
-    //  / \                       /  \
-    // y  T1                     T1  T2
+    //   x（红）T2   ------->   y   node（红）
+    //  /    \                       /  \
+    // y（红）  T1                   T1  T2
     private Node rightRotate(Node node) {
         Node x = node.left;
 
@@ -82,10 +79,10 @@ public class RedBlackTree<K extends Comparable<K>, V> {
     /**
      * 判断当前节点是否为红色
      *
-     * @param node
+     * @param node node
      * @return boolean
      */
-    public boolean isRed(Node node) {
+    private boolean isRed(Node node) {
         if (node == null) {
             return BLACK;
         }
@@ -95,21 +92,22 @@ public class RedBlackTree<K extends Comparable<K>, V> {
     /**
      * 向红黑树中插入元素
      *
-     * @param key
-     * @param value
+     * @param key   key
+     * @param value value
      */
     public void add(K key, V value) {
         root = add(root, key, value);
-        root.color = BLACK;//根节点为黑色节点
+        //根节点为黑色节点
+        root.color = BLACK;
     }
 
     /**
      * 向node为根元素的红黑树中插入元素
      * 递归算法
      *
-     * @param node
-     * @param key
-     * @param value
+     * @param node  node
+     * @param key   key
+     * @param value value
      */
     private Node add(Node node, K key, V value) {
         //递归终止条件，返回结果为null
@@ -126,7 +124,7 @@ public class RedBlackTree<K extends Comparable<K>, V> {
             node.value = value;
         }
 
-        /**==========维护红黑树性质 Start==========*/
+        //==========维护红黑树性质 Start==========
 
         //判断是否需要左旋转
         if (isRed(node.right) && !isRed(node.left)) {
@@ -142,7 +140,7 @@ public class RedBlackTree<K extends Comparable<K>, V> {
         if (isRed(node.left) && isRed(node.right)) {
             flipColors(node);
         }
-        /**==========维护红黑树性质 End==========*/
+        //==========维护红黑树性质 End==========
 
         return node;
     }
@@ -150,10 +148,9 @@ public class RedBlackTree<K extends Comparable<K>, V> {
     /**
      * 查找红黑树的最小值
      *
-     * @param
      * @return V
      */
-    public V minimum() {
+    private V minimum() {
         if (isEmpty()) {
             throw new IllegalArgumentException("BinarySearchTree is empty !");
         }
@@ -164,7 +161,7 @@ public class RedBlackTree<K extends Comparable<K>, V> {
      * 查找以node为根节点红黑树的最小节点
      * 深度优先遍历，递归实现
      *
-     * @param node
+     * @param node node
      * @return BinarySearchTree<E>.Node
      */
     private Node minimum(Node node) {
@@ -180,10 +177,9 @@ public class RedBlackTree<K extends Comparable<K>, V> {
     /**
      * 查找红黑树的最大值
      *
-     * @param
      * @return V
      */
-    public V maximize() {
+    private V maximize() {
         if (isEmpty()) {
             throw new IllegalArgumentException("BinarySearchTree is empty !");
         }
@@ -194,7 +190,7 @@ public class RedBlackTree<K extends Comparable<K>, V> {
      * 查找以node为根节点红黑树的最大节点
      * 深度优先遍历，递归实现
      *
-     * @param node
+     * @param node node
      * @return BinarySearchTree<E>.Node
      */
     private Node maximize(Node node) {
