@@ -28,7 +28,7 @@ public class WeChatMoney {
 
     public static void main(String[] args) {
         LeftMoneyPackage leftMoneyPackage = new LeftMoneyPackage();
-        leftMoneyPackage.setRemainMoney(1000);
+        leftMoneyPackage.setRemainMoney(100);
         leftMoneyPackage.setRemainSize(10);
         Double count = 0D;
         for (int i = 0; i < 10; i++) {
