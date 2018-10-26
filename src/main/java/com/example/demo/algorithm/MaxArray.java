@@ -1,7 +1,6 @@
 package com.example.demo.algorithm;
 
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * n个整数中找出连续m个数加和是最大
@@ -14,20 +13,14 @@ public class MaxArray {
         // int[] 数组 asList返回 int[];形式List对象
         Integer[] paras = {133, 445, 6768, 23, 656, 123105, 768, 234,
                 787, 6321, 5677, 234, 1445, 3551, 547, 3245, 12357};
-        //引用类型的数组转化为集合
-        List<Integer> lists = Arrays.asList(paras);
         int n = 6;
         //将集合转化为数组
-        System.out.println(getArray((Integer[]) lists.toArray(), n));
         System.out.println(getArray(paras, n));
     }
 
     public static <T> String getArray(Integer[] params, int n) {
         // 声明maxs,初始化temp
-        Integer[] maxs = null, temp = null;
-        if (!(params instanceof Integer[])) {
-            return "参数类型错误";
-        }
+        Integer[] maxs, temp;
         temp = new Integer[n];
         maxs = new Integer[n];
         int len = params.length;
@@ -47,20 +40,12 @@ public class MaxArray {
         return Arrays.toString(maxs);
     }
 
-    public static <T> int getSum(T t) {
+    private static <T> int getSum(T t) {
         //取数组或者集合的加和
         int sum = 0;
-        if (t instanceof List<?>) {
-            List<?> temp = (List<?>) t;
-            int len = temp.size();
-            for (int i = 0; i < len; i++) {
-                sum += (Integer) temp.get(i);
-            }
-        } else if (t instanceof Integer[]) {
-            Integer[] temp = (Integer[]) t;
-            for (int i = 0; i < temp.length; i++) {
-                sum += temp[i];
-            }
+        Integer[] temp = (Integer[]) t;
+        for (Integer aTemp : temp) {
+            sum += aTemp;
         }
         return sum;
     }
