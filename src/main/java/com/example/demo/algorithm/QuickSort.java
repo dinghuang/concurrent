@@ -1,58 +1,84 @@
 package com.example.demo.algorithm;
 
-import java.util.Arrays;
+import static com.example.demo.algorithm.SortUtils.*;
 
 /**
  * 快速排序
+ * <p>
+ * 坏的情况下的性能 O(n^2)
+ * 表现最好的情况下 O(n log n) or O(n) with three-way partition
+ * 平均情况下的性能 O(n log n)
  *
  * @author dinghuang123@gmail.com
- * @since 2018/10/26
+ * @since 2018/11/5
  */
-public class QuickSort {
+public class QuickSort implements SortAlgorithm {
+    @Override
+    public <T extends Comparable<T>> T[] sort(T[] array) {
+        doSort(array, 0, array.length - 1);
+        return array;
+    }
+
+    /**
+     * The sorting process
+     *
+     * @param left  The first index of an array
+     * @param right The last index of an array
+     * @param array The array to be sorted
+     **/
+
+    private static <T extends Comparable<T>> void doSort(T[] array, int left, int right) {
+        if (left < right) {
+            int pivot = partition(array, left, right);
+            doSort(array, left, pivot - 1);
+            doSort(array, pivot, right);
+        }
+    }
+
+    /**
+     * This method finds the partition index for an array
+     *
+     * @param array The array to be sorted
+     * @param left  The first index of an array
+     * @param right The last index of an array
+     *              Finds the partition index of an array
+     **/
+
+    private static <T extends Comparable<T>> int partition(T[] array, int left, int right) {
+        int mid = (left + right) / 2;
+        T pivot = array[mid];
+
+        while (left <= right) {
+            while (less(array[left], pivot)) {
+                ++left;
+            }
+            while (less(pivot, array[right])) {
+                --right;
+            }
+            if (left <= right) {
+                swap(array, left, right);
+                ++left;
+                --right;
+            }
+        }
+        return left;
+    }
+
     public static void main(String[] args) {
-        int[] a = {1, 2, 4, 11, 7, 4, 5, 3, 9, 1};
-        System.out.println(Arrays.toString(a));
-        quickSort(a);
-        System.out.println(Arrays.toString(a));
-    }
 
-    public static void quickSort(int[] arr) {
-        qsort(arr, 0, arr.length - 1);
-    }
+        // For integer input
+        Integer[] array = {3, 4, 1, 32, 0, 1, 5, 12, 2, 5, 7, 8, 9, 2, 44, 111, 5};
 
-    private static void qsort(int[] arr, int low, int high) {
-        if (low < high) {
-            //将数组分为两部分
-            int pivot = partition(arr, low, high);
-            //递归排序左子数组
-            qsort(arr, low, pivot - 1);
-            //递归排序右子数组
-            qsort(arr, pivot + 1, high);
-        }
-    }
+        QuickSort quickSort = new QuickSort();
+        quickSort.sort(array);
 
-    private static int partition(int[] arr, int low, int high) {
-        //枢轴记录
-        System.out.println("中枢" + low);
-        int pivot = arr[low];
-        while (low < high) {
-            while (low < high && arr[high] >= pivot) {
-                --high;
-            }
-            //交换比枢轴小的记录到左端
-            arr[low] = arr[high];
-            while (low < high && arr[low] <= pivot) {
-                ++low;
-            }
-            //交换比枢轴小的记录到右端
-            arr[high] = arr[low];
-        }
-        //扫描完成，枢轴到位
-        arr[low] = pivot;
-        System.out.println(Arrays.toString(arr));
-        System.out.println("中枢" + low);
-        //返回的是枢轴的位置
-        return low;
+        //Output => 0 1 1 2 2 3 4 5 5 5 7 8 9 12 32 44 111
+        print(array);
+
+        String[] stringArray = {"c", "a", "e", "b", "d"};
+        quickSort.sort(stringArray);
+
+        //Output => a	b	c	d	e
+        print(stringArray);
     }
 }
-
