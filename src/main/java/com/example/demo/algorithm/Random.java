@@ -1,10 +1,15 @@
 package com.example.demo.algorithm;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * java随机数算法
+ * 线性同余算法，是一个线性方程，Xn是一个种子，a、c、m都是参数，m是设置随机数最得大上限，
+ * 通过种子生成下一个，下一个作为种子生成下下一个随机数。
  *
  * @author dinghuang123@gmail.com
  * @since 2018/11/27
@@ -19,43 +24,28 @@ public class Random {
     private static final long addend = 0xBL;
     private static final long mask = (1L << 48) - 1;
 
-    public static void main(String[] args) {
-
-        while (true) {
-            Scanner sc = new Scanner(System.in);
-            System.out.println("输入种子数：");
-            long a = sc.nextLong();
-            if (a == 0) {
-                for (; ; ) {
-                    long current = seedUniquifier.get();
-                    long next = current * 181783497276652981L;
-                    if (seedUniquifier.compareAndSet(current, next)) {
-                        a = next;
-                        break;
-                    }
-                }
-            }
-            seed = new AtomicLong((a ^ multiplier) & mask);
-            System.out.print("seed" + seed);
-            System.out.println("输入范围：");
-            int b = sc.nextInt();
-            System.out.print("随机数是：");
-            for (int d = 0; d < b; d++) {
-                if (b == 1 || (d == (b - 1))) {
-                    System.out.println(nextInt(b));
-                } else {
-                    System.out.print(nextInt(b) + ",");
-                }
-            }
-            System.out.println("是否结束：y/n?：");
-            String condition = sc.next();
-            if ("y".equals(condition)) {
+    public Random() {
+        long a;
+        for (; ; ) {
+            long current = seedUniquifier.get();
+            long next = current * 181783497276652981L;
+            if (seedUniquifier.compareAndSet(current, next)) {
+                a = next;
                 break;
             }
         }
+        seed = new AtomicLong((a ^ multiplier) & mask);
     }
 
-    private static int nextInt(int bound) {
+    public Random(long seeds) {
+        seed = new AtomicLong((seeds ^ multiplier) & mask);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(Arrays.toString(new Random().getRandoms(0, 100, 100)));
+    }
+
+    private int nextInt(int bound) {
         int r = next(31);
         int m = bound - 1;
         if ((bound & m) == 0) {
@@ -74,10 +64,37 @@ public class Random {
         do {
             oldSeed = tempSeed.get();
             nextSeed = (oldSeed * multiplier + addend) & mask;
-            System.out.print(oldSeed);
-            System.out.print(nextSeed);
-            System.out.print(tempSeed.compareAndSet(oldSeed, nextSeed));
         } while (!tempSeed.compareAndSet(oldSeed, nextSeed));
         return (int) (nextSeed >>> (48 - bits));
+    }
+
+    /**
+     * 根据min和max随机生成count个不重复的随机数组
+     *
+     * @param min   min
+     * @param max   max
+     * @param count count
+     * @return int[]
+     */
+    public int[] getRandoms(int min, int max, int count) {
+        Random random = new Random();
+        int[] randoms = new int[count];
+        List<Integer> listRandom = new ArrayList<>();
+
+        if (count > (max - min + 1)) {
+            return new int[0];
+        }
+        // 将所有的可能出现的数字放进候选list
+        for (int i = min; i <= max; i++) {
+            listRandom.add(i);
+        }
+        // 从候选list中取出放入数组，已经被选中的就从这个list中移除
+        for (int i = 0; i < count; i++) {
+            int index = random.nextInt(listRandom.size());
+            randoms[i] = listRandom.get(index);
+            listRandom.remove(index);
+        }
+
+        return randoms;
     }
 }
