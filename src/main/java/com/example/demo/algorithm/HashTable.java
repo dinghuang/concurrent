@@ -23,14 +23,15 @@ public class HashTable<K, V> {
     private static final int initCapacity = 7;
 
     private TreeMap<K, V>[] hashTable;
-    private int M;
+    private int m ;
     private int size;
 
-    private HashTable(int M) {
-        this.M = M;
+    @SuppressWarnings("unchecked")
+    private HashTable(int m) {
+        this.m = m;
         size = 0;
-        hashTable = new TreeMap[M];
-        for (int i = 0; i < M; i++) {
+        hashTable = new TreeMap[m];
+        for (int i = 0; i < m; i++) {
             hashTable[i] = new TreeMap<>();
         }
     }
@@ -48,7 +49,7 @@ public class HashTable<K, V> {
     }
 
     private int hash(K key) {
-        return key.hashCode() & 0x7fffffff % M;
+        return key.hashCode() & 0x7fffffff % m;
     }
 
     /**
@@ -66,8 +67,8 @@ public class HashTable<K, V> {
             size++;
 
             //扩容
-            if (size >= upperTol * M) {
-                resize(2 * M);
+            if (size >= upperTol * m) {
+                resize(2 * m);
             }
         }
     }
@@ -86,8 +87,8 @@ public class HashTable<K, V> {
             size--;
 
             //缩容
-            if (size < lowerTol * M && M / 2 > initCapacity) {
-                resize(M / 2);
+            if (size < lowerTol * m && m / 2 > initCapacity) {
+                resize(m / 2);
             }
         }
         return result;
@@ -139,8 +140,8 @@ public class HashTable<K, V> {
             newHashTable[i] = new TreeMap<>();
         }
 
-        int oldM = this.M;
-        this.M = newCapacity;
+        int oldM = this.m;
+        this.m = newCapacity;
         for (int i = 0; i < oldM; i++) {
             TreeMap<K, V> treeMap = hashTable[i];
             for (K key : treeMap.keySet()) {
