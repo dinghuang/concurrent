@@ -2,8 +2,6 @@ package com.example.demo.concurrent;
 
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * 阿里巴巴面试题
@@ -30,7 +28,6 @@ public class AliTest {
 
     static class ThreadA extends Thread {
 
-        private Lock lock = new ReentrantLock();
         private AtomicInteger frequence;
         private AtomicInteger valueA;
 
@@ -41,23 +38,18 @@ public class AliTest {
 
         @Override
         public void run() {
-            lock.lock();
-            try {
-                while (frequence.get() > 0) {
-                    if (valueA.get() == 1) {
-                        System.out.print("A");
-                        valueA.compareAndSet(valueA.get(), 2);
-                    }
+            while (frequence.get() > 0) {
+                if (valueA.get() == 1) {
+                    System.out.print("A");
+                    valueA.compareAndSet(valueA.get(), 2);
                 }
-            } finally {
-                lock.unlock();// 释放锁
             }
+
         }
     }
 
     static class ThreadB extends Thread {
 
-        private Lock lock = new ReentrantLock();
         private AtomicInteger frequence;
         private AtomicInteger valueA;
 
@@ -68,23 +60,17 @@ public class AliTest {
 
         @Override
         public void run() {
-            lock.lock();
-            try {
-                while (frequence.get() > 0) {
-                    if (valueA.get() == 2) {
-                        System.out.print("L");
-                        valueA.compareAndSet(valueA.get(), 3);
-                    }
+            while (frequence.get() > 0) {
+                if (valueA.get() == 2) {
+                    System.out.print("L");
+                    valueA.compareAndSet(valueA.get(), 3);
                 }
-            } finally {
-                lock.unlock();
             }
         }
     }
 
     static class ThreadC extends Thread {
 
-        private Lock lock = new ReentrantLock();
         private AtomicInteger frequence;
         private AtomicInteger valueA;
 
@@ -95,17 +81,12 @@ public class AliTest {
 
         @Override
         public void run() {
-            lock.lock();
-            try {
-                while (frequence.get() > 0) {
-                    if (valueA.get() == 3) {
-                        System.out.print("I");
-                        frequence.compareAndSet(frequence.get(), frequence.get() - 1);
-                        valueA.compareAndSet(valueA.get(), 1);
-                    }
+            while (frequence.get() > 0) {
+                if (valueA.get() == 3) {
+                    System.out.print("I");
+                    frequence.compareAndSet(frequence.get(), frequence.get() - 1);
+                    valueA.compareAndSet(valueA.get(), 1);
                 }
-            } finally {
-                lock.unlock();
             }
         }
     }
