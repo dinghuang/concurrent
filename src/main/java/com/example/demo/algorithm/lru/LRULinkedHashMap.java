@@ -3,7 +3,6 @@ package com.example.demo.algorithm.lru;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.Map;
 
@@ -16,11 +15,12 @@ import java.util.Map;
  * @since 2018/12/10
  */
 public class LRULinkedHashMap<K, V> extends LinkedHashMap<K, V> {
+    
     private final int maxCapacity;
 
     private static final float DEFAULT_LOAD_FACTOR = 0.75f;
 
-    private final Lock lock = new ReentrantLock();
+    private final ReentrantLock lock = new ReentrantLock();
 
     public LRULinkedHashMap(int maxCapacity) {
         super(maxCapacity, DEFAULT_LOAD_FACTOR, true);
