@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
 import java.util.Locale;
 
@@ -128,5 +129,34 @@ public class LocalDateTest {
         LocalDate xmas = LocalDate.parse("24.12.2014", germanFormatter);
         // 2014-12-24
         System.out.println(xmas);
+    }
+
+    private static void test4() {
+        // 取当前日期(包含毫秒)：
+        LocalDate today = LocalDate.now();
+        //清除毫秒
+        LocalDateTime now = LocalDateTime.now().withNano(0);
+        //构造时间
+        // 00:00:00
+        LocalTime zero = LocalTime.of(0, 0, 0);
+        // 12:00:00
+        LocalTime mid = LocalTime.parse("12:00:00");
+        // 根据年月日取日期，12月就是12：
+        LocalDate crischristmas = LocalDate.of(2014, 12, 25);
+        // 根据字符串取：
+        // 严格按照ISO yyyy-MM-dd验证，02写成2都不行，当然也有一个重载方法允许自己定义格式
+        LocalDate endOfFeb = LocalDate.parse("2014-02-28");
+        // 无效日期无法通过：DateTimeParseException: Invalid date
+        LocalDate.parse("2014-02-29");
+        // 取本月第1天：
+        LocalDate firstDayOfThisMonth = today.with(TemporalAdjusters.firstDayOfMonth());
+        // 取本月第2天：
+        LocalDate secondDayOfThisMonth = today.withDayOfMonth(2);
+        // 取本月最后一天，再也不用计算是28，29，30还是31：
+        LocalDate lastDayOfThisMonth = today.with(TemporalAdjusters.lastDayOfMonth());
+        // 取下一天：
+        LocalDate firstDayOf2015 = lastDayOfThisMonth.plusDays(1);
+        // 取2015年1月第一个周一，这个计算用Calendar要死掉很多脑细胞：
+        LocalDate firstMondayOf2015 = LocalDate.parse("2015-01-01").with(TemporalAdjusters.firstInMonth(DayOfWeek.MONDAY));
     }
 }
