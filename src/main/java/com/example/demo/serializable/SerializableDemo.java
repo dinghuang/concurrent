@@ -4,7 +4,7 @@ import java.io.*;
 
 /**
  * 测试代码中使用了IO流，但是并没有显示的关闭他。
- * 这其实是Java 7中的新特性try-with-resources。这其实是Java中的一个语法糖
+ * 这其实是Java 7中的新特性try-with-resources。这new 其实是Java中的一个语法糖
  * ，背后原理其实是编译器帮我们做了关闭IO流的工作。
  *
  * @author dinghuang123@gmail.com
@@ -13,7 +13,7 @@ import java.io.*;
 public class SerializableDemo {
     public static void main(String[] args) {
         //Initializes The Object
-        UserSerializable user = new UserSerializable();
+        UserSerializable user = UserSerializable.getUserSerializable();
         user.setName("dinghuang");
         user.setAge(23);
         System.out.println(user);
