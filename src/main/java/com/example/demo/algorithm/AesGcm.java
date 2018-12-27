@@ -3,11 +3,7 @@ package com.example.demo.algorithm;
 import javax.crypto.*;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.nio.ByteBuffer;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
+import java.security.*;
 import java.util.Arrays;
 
 
@@ -26,51 +22,43 @@ import java.util.Arrays;
  */
 public class AesGcm {
 
-    public static void main(String[] args) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
-        //=============================加密部分=============================
-        SecureRandom secureRandom = new SecureRandom();
-        byte[] key = new byte[16];
-        secureRandom.nextBytes(key);
-        SecretKey secretKey = new SecretKeySpec(key, "AES");
-        //NEVER REUSE THIS IV WITH SAME KEY
-        byte[] iv = new byte[12];
-        secureRandom.nextBytes(iv);
-        final Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
-        //128 bit auth tag length
-        GCMParameterSpec parameterSpec = new GCMParameterSpec(128, iv);
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey, parameterSpec);
-        //如果需要，添加可选的关联数据（例如元数据）
-//        cipher.updateAAD(new byte[]{1, 2, 3});
-        //加密；如果你正在加密大块数据，请研究 CipherInputStream，这样整个内容就无需加载到堆中。
-        byte[] cipherText = cipher.doFinal(key);
-        //现在将所有内容连接到一条消息。
-        ByteBuffer byteBuffer = ByteBuffer.allocate(4 + iv.length + cipherText.length);
-        byteBuffer.putInt(iv.length);
-        byteBuffer.put(iv);
-        byteBuffer.put(cipherText);
-        byte[] cipherMessage = byteBuffer.array();
-        //最佳事件是尽可能快地从内存中擦除加密密钥或 IV 等敏感数据。由于 Java 是一种具有自动内存管理的语言，因此我们无法保证以下内容能够预期工作，但在大多数情况下应该如此：
-//        Arrays.fill(key, (byte) 0);
-        //=============================解密部分=============================
-        decode(cipherMessage, key);
+    // AES-GCM parameters
+    public static final int AES_KEY_SIZE = 128; // in bits
+    public static final int GCM_NONCE_LENGTH = 12; // in bytes
+    public static final int GCM_TAG_LENGTH = 16; // in bytes
+
+    public static void main(String[] args) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, NoSuchProviderException {
+        decodePassword("123456");
     }
 
-    public static void decode(byte[] cipherMessage, byte[] key) throws NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException, InvalidAlgorithmParameterException, InvalidKeyException {
-        ByteBuffer byteBufferDecode = ByteBuffer.wrap(cipherMessage);
-        int ivLength = byteBufferDecode.getInt();
-        // check input parameter
-        if (ivLength < 12 || ivLength >= 16) {
-            throw new IllegalArgumentException("invalid iv length");
+
+    public static void decodePassword(String password) throws NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+        SecureRandom random = SecureRandom.getInstanceStrong();
+        KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+        keyGen.init(AES_KEY_SIZE, random);
+        SecretKey key = keyGen.generateKey();
+        System.out.println("秘钥" + Arrays.toString(key.getEncoded()));
+        // ===============加密
+        Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding", "SunJCE");
+        final byte[] nonce = new byte[GCM_NONCE_LENGTH];
+        random.nextBytes(nonce);
+        GCMParameterSpec spec = new GCMParameterSpec(GCM_TAG_LENGTH * 8, nonce);
+        cipher.init(Cipher.ENCRYPT_MODE, key, spec);
+        byte[] aad = "额外信息".getBytes();
+        cipher.updateAAD(aad);
+        byte[] cipherText = cipher.doFinal(password.getBytes());
+        System.out.println("秘文" + Arrays.toString(cipherText));
+        // =================解密
+        cipher.init(Cipher.DECRYPT_MODE, key, spec);
+        cipher.updateAAD(aad);
+        byte[] plainText = cipher.doFinal(cipherText);
+        // check if the decryption result matches
+        if (Arrays.equals(password.getBytes(), plainText)) {
+            System.out.println("Test Passed: match!");
+        } else {
+            System.out.println("Test Failed: result mismatch!");
+            System.out.println(new String(plainText));
         }
-        byte[] ivDecode = new byte[ivLength];
-        byteBufferDecode.get(ivDecode);
-        byte[] cipherTextDecode = new byte[byteBufferDecode.remaining()];
-        byteBufferDecode.get(cipherTextDecode);
-        //初始化密码并添加可选的关联数据并解密：
-        final Cipher cipherDecode = Cipher.getInstance("AES/GCM/NoPadding");
-        cipherDecode.init(Cipher.DECRYPT_MODE, new SecretKeySpec(key, "AES"), new GCMParameterSpec(128, ivDecode));
-//        cipherDecode.updateAAD(new byte[]{1, 2, 3});
-        byte[] plainText = cipherDecode.doFinal(cipherTextDecode);
-        System.out.println(Arrays.toString(plainText));
     }
+
 }
