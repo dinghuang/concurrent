@@ -2,7 +2,6 @@ package com.example.demo.algorithm;
 
 import javax.crypto.*;
 import javax.crypto.spec.GCMParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 import java.security.*;
 import java.util.Arrays;
 
@@ -22,17 +21,16 @@ import java.util.Arrays;
  */
 public class AesGcm {
 
-    // AES-GCM parameters
-    public static final int AES_KEY_SIZE = 128; // in bits
-    public static final int GCM_NONCE_LENGTH = 12; // in bytes
-    public static final int GCM_TAG_LENGTH = 16; // in bytes
+    private static final int AES_KEY_SIZE = 128;
+    private static final int GCM_NONCE_LENGTH = 12;
+    private static final int GCM_TAG_LENGTH = 16;
 
     public static void main(String[] args) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, NoSuchProviderException {
         decodePassword("123456");
     }
 
 
-    public static void decodePassword(String password) throws NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+    private static void decodePassword(String password) throws NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
         SecureRandom random = SecureRandom.getInstanceStrong();
         KeyGenerator keyGen = KeyGenerator.getInstance("AES");
         keyGen.init(AES_KEY_SIZE, random);
