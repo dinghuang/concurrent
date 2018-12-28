@@ -23,40 +23,47 @@ public class ServerConnect {
         selector();
     }
 
-    public static void handleAccept(SelectionKey key) throws IOException {
-        //从SelectionKey访问Channel和Selector
-        ServerSocketChannel ssChannel = (ServerSocketChannel) key.channel();
-        SocketChannel sc = ssChannel.accept();
-        sc.configureBlocking(false);
-        sc.register(key.selector(), SelectionKey.OP_READ, ByteBuffer.allocateDirect(BUF_SIZE));
+    private static void handleAccept(SelectionKey key) throws IOException {
+        //channel：返回为其创建此键的通道。 即使在取消密钥后, 此方法仍将继续返回通道。
+        ServerSocketChannel serverSocketChannel = (ServerSocketChannel) key.channel();
+        //可选择的通道, 用于面向流的连接插槽。
+        SocketChannel socketChannel = serverSocketChannel.accept();
+        //设定为非阻塞
+        socketChannel.configureBlocking(false);
+        //接受客户端，并将它注册到选择器，并添加附件
+        socketChannel.register(key.selector(), SelectionKey.OP_READ, ByteBuffer.allocateDirect(BUF_SIZE));
+        System.out.println("Accepted connection from " + socketChannel);
     }
 
-    public static void handleRead(SelectionKey key) throws IOException {
-        SocketChannel sc = (SocketChannel) key.channel();
-        ByteBuffer buf = (ByteBuffer) key.attachment();
-        long bytesRead = sc.read(buf);
+    private static void handleRead(SelectionKey key) throws IOException {
+        SocketChannel socketChannel = (SocketChannel) key.channel();
+        ByteBuffer byteBuffer = (ByteBuffer) key.attachment();
+        long bytesRead = socketChannel.read(byteBuffer);
         while (bytesRead > 0) {
-            buf.flip();
-            while (buf.hasRemaining()) {
-                System.out.print((char) buf.get());
+            //设置缓冲区
+            byteBuffer.flip();
+            while (byteBuffer.hasRemaining()) {
+                System.out.print((char) byteBuffer.get());
             }
             System.out.println();
-            buf.clear();
-            bytesRead = sc.read(buf);
+            byteBuffer.clear();
+            bytesRead = socketChannel.read(byteBuffer);
         }
         if (bytesRead == -1) {
-            sc.close();
+            socketChannel.close();
         }
     }
 
-    public static void handleWrite(SelectionKey key) throws IOException {
-        ByteBuffer buf = (ByteBuffer) key.attachment();
-        buf.flip();
-        SocketChannel sc = (SocketChannel) key.channel();
-        while (buf.hasRemaining()) {
-            sc.write(buf);
+    private static void handleWrite(SelectionKey key) throws IOException {
+        //attachment : 检索当前附件
+        ByteBuffer byteBuffer = (ByteBuffer) key.attachment();
+        SocketChannel socketChannel = (SocketChannel) key.channel();
+        byteBuffer.flip();
+        while (byteBuffer.hasRemaining()) {
+            socketChannel.write(byteBuffer);
         }
-        buf.compact();
+        //压缩缓冲区
+        byteBuffer.compact();
     }
 
     /**
@@ -67,14 +74,14 @@ public class ServerConnect {
      */
     public static void selector() {
         Selector selector = null;
-        ServerSocketChannel ssc = null;
+        ServerSocketChannel serverSocketChannel = null;
         try {
             selector = Selector.open();
             //需要创建一个Selector实例（使用静态工厂方法open()）
-            ssc = ServerSocketChannel.open();
+            serverSocketChannel = ServerSocketChannel.open();
             //使用选择器（Selector），并将其注册（register）到想要监控的信道上
-            ssc.socket().bind(new InetSocketAddress(PORT));
-            ssc.configureBlocking(false);
+            serverSocketChannel.socket().bind(new InetSocketAddress(PORT));
+            serverSocketChannel.configureBlocking(false);
             //注意register()方法的第二个参数。这是一个“interest集合”，意思是在通过Selector监听Channel时对什么事件感兴趣。可以监听四种不同类型的事件：
             //1. Connect
             //2. Accept
@@ -86,38 +93,47 @@ public class ServerConnect {
             //2. SelectionKey.OP_ACCEPT
             //3. SelectionKey.OP_READ
             //4. SelectionKey.OP_WRITE
-            ssc.register(selector, SelectionKey.OP_ACCEPT);
+            serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
             while (true) {
-                //调用选择器的select()方法。该方法会阻塞等待
-                //如果为正数，则阻塞*毫秒，或多或少，同时等待*通道就绪;如果为零，则无限期阻塞;*不能是否定的
+                //调用选择器的select()方法。该方法会阻塞等待，阻塞将一直持续到下一个传入事件
+//                selector.select();
                 if (selector.select(TIMEOUT) == 0) {
-                    System.out.println("==");
+                    System.out.println("无限期阻塞");
+                    continue;
+                } else if (selector.select(TIMEOUT) > 0) {
+                    System.out.println("阻塞" + selector.select(TIMEOUT) + "毫秒");
                     continue;
                 }
+                //获取所有接收事件的SelectionKey实例
                 //这个对象包含了一些你感兴趣的属性：
                 //interest集合
                 //ready集合
                 //Channel
                 //Selector
                 //附加的对象（可选）
-                Iterator<SelectionKey> iter = selector.selectedKeys().iterator();
-                while (iter.hasNext()) {
-                    SelectionKey key = iter.next();
+                Iterator<SelectionKey> selectionKeyIterator = selector.selectedKeys().iterator();
+                while (selectionKeyIterator.hasNext()) {
+                    SelectionKey key = selectionKeyIterator.next();
+                    selectionKeyIterator.remove();
                     //测试此键的通道是否准备好接受新的Socket*连接。
                     if (key.isAcceptable()) {
+                        System.out.println("通道准备好接受新的Socket*连接");
                         handleAccept(key);
                     }
+                    //检查套接字是否已经准备好读数据
                     if (key.isReadable()) {
+                        System.out.println("通道准备好读数据");
                         handleRead(key);
                     }
+                    //检查套接字是否已经准备好写数据
                     if (key.isWritable() && key.isValid()) {
+                        System.out.println("通道准备好写数据");
                         handleWrite(key);
                     }
                     if (key.isConnectable()) {
                         System.out.println("isConnectable = true");
                     }
-                    iter.remove();
                 }
             }
 
@@ -128,8 +144,8 @@ public class ServerConnect {
                 if (selector != null) {
                     selector.close();
                 }
-                if (ssc != null) {
-                    ssc.close();
+                if (serverSocketChannel != null) {
+                    serverSocketChannel.close();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
