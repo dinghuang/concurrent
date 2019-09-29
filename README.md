@@ -8,6 +8,7 @@
       * [5. java8](#5-java8)
       * [6. lambda](#6-lambda)
       * [7. lock](#7-lock)     
+      * [8. leetcode](#8-lock)     
 ## 0. 文件目录层级
 - src <br>
 -  &nbsp;    main.java.com.example.demo<br>
@@ -18,6 +19,7 @@
 -    &nbsp;  &nbsp;  &nbsp;      google -----谷歌Guava练习<br>
 -    &nbsp;  &nbsp;  &nbsp;      java8 -----java8新特性<br>
 -    &nbsp;  &nbsp;  &nbsp;      lambda -----lambda表达式练习<br>
+-    &nbsp;  &nbsp;  &nbsp;      leetcode -----leetcode练习题<br>
 -    &nbsp;  &nbsp;  &nbsp;      lock -----锁相关<br>
 -    &nbsp;  &nbsp;  &nbsp;      util -----工具类<br>
 -    &nbsp;  &nbsp;  &nbsp;      websocket -----WebSocket练习<br>
@@ -29,4 +31,5 @@
 ## 5. java8
 ## 6. lambda
 ## 7. lock
+## 7. leetcode
 
